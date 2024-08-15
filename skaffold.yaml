@@ -23,6 +23,14 @@ build:
         manual:
           - src: 'src/**/*.ts'
             dest: .
+    - image: alobban/orders
+      context: orders
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: 'src/**/*.ts'
+            dest: .
     - image: alobban/client
       context: client
       docker:
