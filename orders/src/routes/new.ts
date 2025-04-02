@@ -24,6 +24,8 @@ router.post(
     body('ticketId')
       .not()
       .isEmpty()
+      // This is subtle coupling between the orders service and MongoDB
+      // We should avoid this kind of coupling in a microservices architecture
       .custom((input: string) => mongoose.Types.ObjectId.isValid(input))
       .withMessage('TicketId must be provided'),
   ],

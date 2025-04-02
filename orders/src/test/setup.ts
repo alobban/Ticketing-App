@@ -21,10 +21,12 @@ jest.mock('../nats-wrapper');
 
 beforeEach(async () => {
   jest.clearAllMocks();
-  const collections = await mongoose.connection.db.collections();
+  if (mongoose.connection.db) {
+    const collections = await mongoose.connection.db.collections();
 
-  for (let collection of collections) {
-    await collection.deleteMany({});
+    for (let collection of collections) {
+      await collection.deleteMany({});
+    }
   }
 });
 
