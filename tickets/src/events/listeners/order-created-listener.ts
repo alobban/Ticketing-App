@@ -1,16 +1,34 @@
-import { Listener, OrderCreatedEvent, Subjects } from '@al_tickets/common';
+import {
+  Listener,
+  NotFoundError,
+  OrderCreatedEvent,
+  Subjects,
+} from '@al_tickets/common';
 import { Message } from 'node-nats-streaming';
 
 import { queueGroupName } from './queue-group-name';
+import { Ticket } from '../../models/tickets';
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   readonly subject = Subjects.OrderCreated;
   queueGroupName = queueGroupName;
 
   async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
-    console.log('Order created event data:', data);
-    // Here you can implement any logic you want to perform when an order is created
-    // For example, you might want to update the ticket's availability status
-    // or send a notification to the user.
+    // Find the ticket that the order is reserving
+    const ticket = await Ticket.findById(data.ticket.id);
+
+    // If no ticket, throw error
+    if (!ticket) {
+      throw new Error('Ticket not found');
+    }
+
+    // Mark the ticket as being reserved by setting its orderId property
+    ticket.set({ orderId: data.id });
+
+    // Save the ticket
+    await ticket.save();
+
+    // ack the message
+    msg.ack();
   }
 }
