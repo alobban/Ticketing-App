@@ -2,13 +2,27 @@ import { Listener, OrderCreatedEvent, Subjects } from '@al_tickets/common';
 import { Message } from 'node-nats-streaming';
 
 import { queueGroupName } from './queue-group-name';
+import { expirationQueue } from '../../queues/expiration-queue';
 
 export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
   readonly subject = Subjects.OrderCreated;
   queueGroupName = queueGroupName;
 
-  onMessage(data: OrderCreatedEvent['data'], msg: Message) {
-    console.log('Order created event data!', data);
+  async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
+    // Set the delay based on the expiration time
+    const delay = new Date(data.expiresAt).getTime() - new Date().getTime();
+    console.log(
+      `Waiting for ${delay} milliseconds before processing the order: ${data.id}`
+    );
+
+    await expirationQueue.add(
+      {
+        orderId: data.id,
+      },
+      {
+        delay,
+      }
+    );
 
     // ack the message
     msg.ack();
