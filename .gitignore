@@ -4,3 +4,4 @@
 **/*/.next
 /common
 .vscode/
+.env*
