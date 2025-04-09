@@ -4,6 +4,7 @@ import { OrderStatus } from '@al_tickets/common';
 import { app } from '../../app';
 import { Order } from '../../models/order';
 import { stripe } from '../../stripe';
+import { Payment } from '../../models/payment';
 
 it('returns a 404 if the route does not exist', async () => {
   await request(app)
@@ -88,8 +89,17 @@ it('returns a 201 with valid inputs', async () => {
     (charge) => charge.amount === price * 100
   );
 
-  console.log('stripe charge', stripeCharge);
+  // console.log('stripe charge', stripeCharge);
   expect(stripeCharge).toBeDefined();
   expect(stripeCharge!.currency).toEqual('usd');
   expect(stripeCharge!.amount).toEqual(price * 100);
+
+  const payment = await Payment.findOne({
+    orderId: order.id,
+    stripeId: stripeCharge!.id,
+  });
+
+  expect(payment).not.toBeNull();
+  expect(payment!.orderId).toEqual(order.id);
+  expect(payment!.stripeId).toEqual(stripeCharge!.id);
 });
