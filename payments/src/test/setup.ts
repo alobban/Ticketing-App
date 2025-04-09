@@ -1,6 +1,10 @@
 import { MongoMemoryServer } from 'mongodb-memory-server';
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env.local file (STRIPE_KEY)
+dotenv.config({ path: '.env.local' });
 
 declare global {
   var signup: (id?: string) => string[];
