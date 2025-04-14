@@ -1,3 +1,4 @@
+import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 
 const ShowTicket = ({ ticket }) => {
@@ -7,7 +8,8 @@ const ShowTicket = ({ ticket }) => {
     body: {
       ticketId: ticket.id,
     },
-    onSuccess: (order) => console.log(order),
+    onSuccess: (order) =>
+      Router.push('/orders/[orderId]', `/orders/${order.id}`),
   });
 
   return (
