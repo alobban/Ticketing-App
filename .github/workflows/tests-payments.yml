@@ -9,6 +9,9 @@ jobs:
     env:
       STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
     steps:
+      - name: Create .env file
+        run: |
+          echo "STRIPE_KEY=${{ secrets.STRIP_KEY }}" >> .env
       - name: Debug env vars
         run: env
       - uses: actions/checkout@v2
