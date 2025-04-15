@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import StripeCheckout from 'react-stripe-checkout';
 
 import useRequest from '../../hooks/use-request';
+import Router from 'next/router';
 
 const STRIPE_KEY =
   'pk_test_51RC3Nj4KXGSv3yJm3RCGeCox4snGTOq6vRV2uRU8Ebjf0dg7wPfZ1Nw5dFj4lsdzdZ7o7PpqjiicfAEIwljjRAWk00WAryUFPO';
@@ -14,7 +15,7 @@ const ShowOrder = ({ order, currentUser }) => {
     body: {
       orderId: order.id,
     },
-    onSuccess: (payment) => console.log(payment),
+    onSuccess: () => Router.push('/orders'),
   });
 
   useEffect(() => {
