@@ -9,5 +9,7 @@ jobs:
     env:
       STRIPE_KEY: ${{ secrets.STRIPE_KEY }}
     steps:
+      - name: Debug env vars
+        run: env
       - uses: actions/checkout@v2
       - run: cd payments && npm install && npm run test:ci
