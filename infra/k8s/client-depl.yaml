@@ -15,6 +15,14 @@ spec:
       containers:
         - name: client
           image: alobban/client
+          # Add this environment variable
+          env:
+            - name: BASE_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: ticketing-config
+                  key: BASE_URL
+
 ---
 apiVersion: v1
 kind: Service

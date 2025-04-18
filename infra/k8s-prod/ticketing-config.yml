@@ -1,0 +1,7 @@
+# infra/k8s-prod/ticketing-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: ticketing-config
+data:
+  BASE_URL: 'http://www.iamandrewlobban.com'
